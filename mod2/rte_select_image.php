@@ -116,12 +116,18 @@ class localFolderTree extends t3lib_folderTree {
 
 		$out='';
 		$c=0;
-
+		$subFolderPadding = 0;
 			// Traverse rows for the tree and print them into table rows:
 		foreach($treeArr as $k => $v) {
 			$c++;
-			//$bgColor=' class="'.(($c+1)%2 ? 'bgColor' : 'bgColor-10').'"';
-			$out.='<tr'.$bgColor.'><td nowrap="nowrap">'.$v['HTML'].$this->wrapTitle(t3lib_div::fixed_lgd_cs($v['row']['title'],$titleLen),$v['row']).'</td></tr>';
+			if ($v['isFirst']) {
+				$subFolderPadding += 16;
+			}
+			$subFolderStyle = ' style="padding-left: '.$subFolderPadding.'px;"';
+			$out.='<tr><td '.$subFolderStyle.'nowrap="nowrap">'.$v['HTML'].$this->wrapTitle(t3lib_div::fixed_lgd_cs($v['row']['title'],$titleLen),$v['row']).'</td></tr>';
+			if ($v['isLast']) {
+				$subFolderPadding -= 16;
+			}
 		}
 
 		$out='<table border="0" cellpadding="0" cellspacing="0">'.$out.'</table>';

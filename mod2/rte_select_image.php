@@ -77,7 +77,9 @@ class localFolderTree extends t3lib_folderTree {
 	 */
 	function ext_isLinkable($v)	{
 		$webpath=t3lib_BEfunc::getPathType_web_nonweb($v['path']);
-		if ($GLOBALS['SOBE']->act=='magic') return 1;	//$webpath='web';	// The web/non-web path does not matter if the mode is 'magic'
+		if ($GLOBALS['SOBE']->act=='magic' || $GLOBALS['SOBE']->act=='upload') {
+			return 1;
+		}//$webpath='web'; 	// The web/non-web path does not matter if the mode is 'magic' or 'upload'
 
 		if (strstr($v['path'],'_recycler_') || strstr($v['path'],'_temp_') || $webpath!='web')	{
 			return 0;
@@ -509,11 +511,9 @@ class SC_rte_select_image {
 				// File-folders:
 			$foldertree = t3lib_div::makeInstance("localFolderTree");
 			$tree=$foldertree->getBrowsableTree();
-			$this->content.= '<table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
-			<tr>
-				<td valign="top" style="width: 100%;"><fieldset><legend>'.$LANG->getLL("folderTree").'</legend><div style="overflow: hidden;"><table><tr><td>'.$tree.'</td></tr></table></div></fieldset></td>
-			</tr>
-			</table>';
+			list(,,$specUid) = explode("_",t3lib_div::_GP("PM"));
+			$files = $this->expandFolder($foldertree->specUIDmap[$specUid],$this->act=="plain",$noThumbs?$noThumbs:!$_MOD_SETTINGS['displayThumbs']);
+			$files = '<fieldset><legend>'.$GLOBALS['LANG']->getLL('images').'</legend><div style="overflow: hidden;"><table><tr><td>'.$files.'</td></tr></table></div></fieldset>';
 			$fileProcessor = t3lib_div::makeInstance("t3lib_basicFileFunctions");
 			$fileProcessor->init($FILEMOUNTS, $TYPO3_CONF_VARS["BE"]["fileExtensions"]);
 			$path=t3lib_div::_GP("expandFolder");
@@ -521,9 +521,16 @@ class SC_rte_select_image {
 				$path = $fileProcessor->findTempFolder();	// The closest TEMP-path is found
 				if ($path)	$path.="/";
 			}
-			if ($path && @is_dir($path))	{
-				$this->content.=$this->uploadForm($path);
-			}
+			$displayPath = ($path && @is_dir($path)) ? $this->uploadForm($path) : 'Not a valid path.';
+
+			$this->content.= '<table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+			<tr>
+				<td valign="top" style="width: 100%;"><fieldset><legend>'.$LANG->getLL("folderTree").'</legend><div style="overflow: hidden;"><table><tr><td>'.$tree.'</td></tr></table></div></fieldset></td>
+				<td valign="top" style="width: 1%;"><img src="clear.gif" width="5" alt="clear" /></td>
+				<td valign="top" style="width: 48%;">'.$displayPath.'<br />'.$files.'</td>
+			</tr>
+			</table>';
+
 
 		} else {
 

@@ -664,7 +664,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 					}
 
 					$this->curUrlInfo = $this->parseCurUrl('mailto:'.$currentLinkParts[0], $this->siteURL);
-				} elseif (strstr($this->curUrlArray['href'], 'record:')) {
+				} elseif (strstr($this->curUrlArray['href'], 'record:') || strstr($this->curUrlArray['href'], 'env_link:')) {
 					$handel = t3lib_div::trimExplode(':',$this->curUrlArray['href']);
 
 					if ( is_array($this->thisConfig['linkhandler.'][$handel[1] . '.']) ) {
@@ -679,27 +679,30 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 							$this->curUrlInfo = array();
 						}
 						$this->curUrlInfo['cElement'] = $handel[2];
-					} else {
-						echo "in PageTSconfig you should define RTE.default.linkhandler." . $handel[1];
-						echo "<br /> Example Config tt_news:";
-						echo "<pre>
-RTE.default.linkhandler {
-	tt_news {
-		default {
-			# instead of default you could write the id of the storage folder
-			# id of the Single News Page
-			parameter = 27
-			additionalParams = &tx_ttnews[tt_news]={field:uid}
-			additionalParams.insertData = 1
-			# you need: uid, hidden, header [this is the displayed title] (use xx as header to select other properties)
-			# you can provide: bodytext [alternative title], starttime, endtime [to display the current status]
-			select = uid,title as header,hidden,starttime,endtime,bodytext
-			sorting = crdate
-		}
-	}
-}
-</pre>";
-						die(); //message to user; wrong config
+					} else { // No config, just slap it into the "External URL" field ;)
+						$this->curUrlInfo['info'] = $this->curUrlArray['href'];
+						$this->curUrlInfo['value'] = $this->curUrlArray['href'];
+						$this->act = 'url';
+//						echo "in PageTSconfig you should define RTE.default.linkhandler." . $handel[1];
+//						echo "<br /> Example Config tt_news:";
+//						echo "<pre>
+//RTE.default.linkhandler {
+//	tt_news {
+//		default {
+//			# instead of default you could write the id of the storage folder
+//			# id of the Single News Page
+//			parameter = 27
+//			additionalParams = &tx_ttnews[tt_news]={field:uid}
+//			additionalParams.insertData = 1
+//			# you need: uid, hidden, header [this is the displayed title] (use xx as header to select other properties)
+//			# you can provide: bodytext [alternative title], starttime, endtime [to display the current status]
+//			select = uid,title as header,hidden,starttime,endtime,bodytext
+//			sorting = crdate
+//		}
+//	}
+//}
+//</pre>";
+//						die(); //message to user; wrong config
 					}
 				} else { // nothing of the above. this is an external link
 					if(strpos($this->curUrlArray['href'], '://') === false) {

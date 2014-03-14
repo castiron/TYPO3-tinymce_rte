@@ -664,7 +664,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 					}
 
 					$this->curUrlInfo = $this->parseCurUrl('mailto:'.$currentLinkParts[0], $this->siteURL);
-				} elseif (strstr($this->curUrlArray['href'], 'record:')) {
+				} elseif (strstr($this->curUrlArray['href'], 'record:') || strstr($this->curUrlArray['href'], 'env_link:')) {
 					$handel = t3lib_div::trimExplode(':',$this->curUrlArray['href']);
 
 					if ( is_array($this->thisConfig['linkhandler.'][$handel[1] . '.']) ) {

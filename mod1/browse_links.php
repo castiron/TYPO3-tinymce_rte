@@ -38,19 +38,11 @@
 
 require ('conf.php');
 require ($BACK_PATH.'init.php');
-require_once ($BACK_PATH.'template.php');
-require_once (PATH_t3lib.'class.t3lib_browsetree.php');
-require_once (PATH_t3lib.'class.t3lib_foldertree.php');
-require_once (PATH_t3lib.'class.t3lib_stdgraphic.php');
-require_once (PATH_t3lib.'class.t3lib_basicfilefunc.php');
+if (strpos(TYPO3_version, '6') === FALSE) {
+	require($BACK_PATH . 'template.php');
+}
+
 $LANG->includeLLFile('EXT:tinymce_rte/mod1/locallang_browse_links.xml');
-
-	// Include classes
-require_once (PATH_t3lib.'class.t3lib_page.php');
-require_once (PATH_t3lib.'class.t3lib_recordlist.php');
-require_once ($BACK_PATH.'class.db_list.inc');
-require_once ($BACK_PATH.'class.db_list_extra.inc');
-
 require_once ('../class.tx_tinymce_rte_base.php');
 
 class tinymce_rte_template extends template {

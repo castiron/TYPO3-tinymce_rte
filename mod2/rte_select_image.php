@@ -33,11 +33,14 @@
 unset($MCONF);
 require ('conf.php');
 require ($BACK_PATH.'init.php');
-require_once ($BACK_PATH.'template.php');
 
-require_once (PATH_t3lib.'class.t3lib_foldertree.php');
-require_once (PATH_t3lib.'class.t3lib_stdgraphic.php');
-require_once (PATH_t3lib.'class.t3lib_basicfilefunc.php');
+if (strpos(TYPO3_version, '6') === FALSE) {
+	require($BACK_PATH . 'template.php');
+}
+
+//require_once (PATH_t3lib.'class.t3lib_foldertree.php');
+//require_once (PATH_t3lib.'class.t3lib_stdgraphic.php');
+//require_once (PATH_t3lib.'class.t3lib_basicfilefunc.php');
 //$LANG->includeLLFile('EXT:tinymce_rte/mod2/locallang_rte_select_image.php');
 $LANG->includeLLFile('EXT:tinymce_rte/mod2/locallang_rte_select_image.xml');
 

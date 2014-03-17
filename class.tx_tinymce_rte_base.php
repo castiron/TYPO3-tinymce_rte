@@ -29,12 +29,8 @@
  *
  */
 
-require_once(PATH_t3lib.'class.t3lib_rteapi.php');
-require_once(PATH_t3lib.'class.t3lib_tsparser.php');
-require_once(PATH_t3lib.'class.t3lib_cs.php');
-require_once(PATH_t3lib.'class.t3lib_page.php');
 
-class tx_tinymce_rte_base extends t3lib_rteapi {
+class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 
 	var $forceUTF8 = true;
 	private static $coreLoaded = false;
@@ -97,22 +93,22 @@ class tx_tinymce_rte_base extends t3lib_rteapi {
 		$code = $this->triggerField($PA['itemFormElName']);
 		$code .= '<textarea id="RTEarea'.$parentObject->RTEcounter.'" class="tinymce_rte" name="'.htmlspecialchars($PA['itemFormElName']).'" rows="30" cols="100">'.t3lib_div::formatForTextarea($value).'</textarea>';
 
-		if ( !$config['useFEediting'] ) {
-			$config['init.']['window'] = 'self';
-			$config['init.']['element_id'] = 'RTEarea' . $parentObject->RTEcounter;
-			$config['init.']['reAddCss'] = 'true';
-			$code .= '
-				<script type="text/javascript">
-					top.tinyMCE.execCommand("mceAddFrameControl", false, ' . $this->parseConfig($config['init.']) . ');
-				</script>
-			';
-		} else {
+//		if ( !$config['useFEediting'] ) {
+//			$config['init.']['window'] = 'self';
+//			$config['init.']['element_id'] = 'RTEarea' . $parentObject->RTEcounter;
+//			$config['init.']['reAddCss'] = 'true';
+//			$code .= '
+//				<script type="text/javascript">
+//					top.tinyMCE.execCommand("mceAddFrameControl", false, ' . $this->parseConfig($config['init.']) . ');
+//				</script>
+//			';
+//		} else {
 			if (!self::$coreLoaded) {
 				$code .= $this->getCoreScript( $config );
 				self::$coreLoaded = TRUE;
 			}
 			$code .= $this->getInitScript( $config['init.'] );
-		}
+//		}
 		return $code;
 	}
 

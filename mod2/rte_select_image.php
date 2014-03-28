@@ -53,6 +53,14 @@ class localFolderTree extends t3lib_folderTree {
 	var $ext_IconMode=1;
 
 	/**
+	 *
+	 */
+	function __construct() {
+		$this->thisScript = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME');
+		parent::__construct();
+	}
+
+	/**
 	 * Wrapping the title in a link, if applicable.
 	 *
 	 * @param	string		Title, ready for output.
@@ -103,6 +111,26 @@ class localFolderTree extends t3lib_folderTree {
 		}
 		$aOnClick = 'return jumpToUrl(\'?PM='.$cmd.'\',\''.$anchor.'\');';
 		return '<a href="#"'.$name.' onclick="'.htmlspecialchars($aOnClick).'">'.$icon.'</a>';
+	}
+
+	/**
+	 * @param string $icon
+	 * @param string $cmd
+	 * @param string $bMark
+	 * @return string
+	 */
+	public function PMiconATagWrap($icon, $cmd, $bMark='') {
+		if ($this->thisScript) {
+			// Activates dynamic AJAX based tree
+			if ($bMark)	{
+				$anchor = '#'.$bMark;
+				$name = ' name="'.$bMark.'"';
+			}
+			$aOnClick = 'return jumpToUrl(\''.$this->thisScript.'?PM='.$cmd.'\',\''.$anchor.'\');';
+			return '<a href="#"'.$name.' onclick="'.htmlspecialchars($aOnClick).'">'.$icon.'</a>';
+		} else {
+			return $icon;
+		}
 	}
 
 	/**

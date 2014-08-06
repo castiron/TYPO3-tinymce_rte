@@ -685,6 +685,10 @@ class SC_rte_select_image {
 			$code.='<input type="File" name="upload_'.$a.'"'.$this->doc->formWidth(35).' size="50">
 				<input type="Hidden" name="file[upload]['.$a.'][target]" value="'.$path.'">
 				<input type="Hidden" name="file[upload]['.$a.'][data]" value="'.$a.'"><BR>';
+
+		}
+		if (strpos(TYPO3_version, '6') !== FALSE) {
+			$code .= '<input type="hidden" name="formToken" value="' . $this->getFormToken() . '">';
 		}
 		$code.='
 			<input type="Hidden" name="redirect" value="'.t3lib_extMgm::extRelPath('tinymce_rte').'mod2/rte_select_image.php?act=magic&expandFolder='.rawurlencode($path).'&RTEtsConfigParams='.rawurlencode(t3lib_div::_GP("RTEtsConfigParams")).'">
@@ -699,6 +703,13 @@ class SC_rte_select_image {
 		</table></FORM></fieldset>';
 
 		return $code;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getFormToken() {
+		return \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('tceAction');
 	}
 
 	/**

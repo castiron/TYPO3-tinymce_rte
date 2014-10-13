@@ -1777,7 +1777,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 	public function expandFolder(\TYPO3\CMS\Core\Resource\Folder $folder, $extensionList = '') {
 		$out = '';
 		$renderFolders = $this->act === 'folder';
-		if ($folder->checkActionPermission('browse')) {
+		if ($folder->checkActionPermission('read')) {
 			// Prepare current path value for comparison (showing red arrow)
 			$currentIdentifier = '';
 			if ($this->curUrlInfo['value']) {

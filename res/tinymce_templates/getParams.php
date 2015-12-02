@@ -25,6 +25,6 @@ RTE.default.init.template_templates {
  *
  */
 	
-	$this->content .= print_r(t3lib_div::_GET(), true);
+	$this->content .= print_r(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET(), true);
 
 ?>

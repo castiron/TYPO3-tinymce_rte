@@ -32,7 +32,7 @@ class tx_tinymce_rte_feeditadv {
 	function addIncludes() {
 		global $TSFE;
 		
-		$tinymce_rte = t3lib_div::makeInstance('tx_tinymce_rte_base');
+		$tinymce_rte = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_tinymce_rte_base');
 		
 		$pageTSconfig = t3lib_BEfunc::getPagesTSconfig( $TSFE->id );
 		$config = $pageTSconfig['RTE.']['default.'];

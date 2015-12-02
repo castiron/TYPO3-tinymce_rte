@@ -5,8 +5,8 @@
 	require ($BACK_PATH.'init.php');
 	
 	$pageId = 0;
-	if( t3lib_div::_GP('pageId') ) {
-		$pageId = t3lib_div::_GP('pageId');
+	if( \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pageId') ) {
+		$pageId = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pageId');
 	}
 	$pageTSconfig = t3lib_BEfunc::getPagesTSconfig( $pageId );
 	

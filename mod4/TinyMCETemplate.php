@@ -32,7 +32,7 @@
 require_once('class.tx_tinymce_rte_templates.php');
 
 // Make instance:
-$TinyMCE_template = t3lib_div::makeInstance('tx_tinymce_rte_templates');
+$TinyMCE_template = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_tinymce_rte_templates');
 $TinyMCE_template->init();
 $TinyMCE_template->printContent();
 	

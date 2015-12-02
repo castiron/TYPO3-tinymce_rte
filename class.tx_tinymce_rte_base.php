@@ -91,7 +91,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 
 	function getTextarea($parentObject, $PA, $value, $config) {
 		$code = $this->triggerField($PA['itemFormElName']);
-		$code .= '<textarea id="RTEarea'.$parentObject->RTEcounter.'" class="tinymce_rte" name="'.htmlspecialchars($PA['itemFormElName']).'" rows="30" cols="100">'.t3lib_div::formatForTextarea($value).'</textarea>';
+		$code .= '<textarea id="RTEarea'.$parentObject->RTEcounter.'" class="tinymce_rte" name="'.htmlspecialchars($PA['itemFormElName']).'" rows="30" cols="100">'.\TYPO3\CMS\Core\Utility\GeneralUtility::formatForTextarea($value).'</textarea>';
 
 //		if ( !$config['useFEediting'] ) {
 //			$config['init.']['window'] = 'self';
@@ -137,7 +137,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 
 		// get the language (also checks if lib is called from FE or BE, which might of use later.)
 		if (TYPO3_MODE == 'FE') {
-			$LANG = t3lib_div::makeInstance('language');
+			$LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
 			$LANG->init($GLOBALS['TSFE']->tmpl->setup['config.']['language']);
 			$LANG->includeLLFile('typo3conf/ext/tinymce_rte/mod1/locallang_browse_links.xml');
 		} else {
@@ -157,7 +157,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 		}
 
 		$config['init.']['language'] = $this->language;
-		$config['init.']['document_base_url'] = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+		$config['init.']['document_base_url'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 		$config['init.']['elements'] = 'RTEarea' . $rteId;
 
 		// resolve EXT pathes for these values
@@ -279,7 +279,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 				// TemplaVoila is installed
 				if (t3lib_extMgm::isLoaded('templavoila')) {
 					require_once(t3lib_extMgm::extPath('templavoila').'class.tx_templavoila_api.php');
-					$tvAPI = t3lib_div::makeInstance('tx_templavoila_api');
+					$tvAPI = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_templavoila_api');
 
 					// Add all nested TV fields to location
 					$tmp = array();
@@ -310,7 +310,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 		// A hook  to allow pre-processing of custom tables
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tinymce_rte']['processTableConfiguration'])) {
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tinymce_rte']['processTableConfiguration'] as $_classRef) {
-				$_procObj = &t3lib_div::getUserObj($_classRef);
+				$_procObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($_classRef);
 				$tmp = array();
 				$tmp = $_procObj->process_table_configuration($table, $row);
 				$where = array_merge($where, $tmp);
@@ -437,7 +437,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 	 */
 	function parseConfig($config) {
 		if ( !function_exists('json_encode') )
-			$code = t3lib_div::array2json($this->fixTSArray($config));
+			$code = \TYPO3\CMS\Core\Utility\GeneralUtility::array2json($this->fixTSArray($config));
 		else
 			$code = json_encode($this->fixTSArray($config));
 
@@ -483,9 +483,9 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 	 * @return	string	the corresponding setupTSconfig
 	 */
 	function getSetupTS($pageUid) {
-		$sysPageObj = t3lib_div::makeInstance('t3lib_pageSelect');
+		$sysPageObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_pageSelect');
 		$rootLine = $sysPageObj->getRootLine($pageUid);
-		$TSObj = t3lib_div::makeInstance('t3lib_tsparser_ext');
+		$TSObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_tsparser_ext');
 		$TSObj->tt_track = 0;
 		$TSObj->init();
 		$TSObj->runThroughTemplates($rootLine);
@@ -543,7 +543,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 				function typo3filemanager(field_name, url, type, win) {
 					var tab = "";
 					// xxx on start TinyMCE seem to not make all elements relative; this ensures it
-					if ( url.indexOf("' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . '") > -1 ) url = url.substr(' . strlen( t3lib_div::getIndpEnv('TYPO3_SITE_URL') ) . ');
+					if ( url.indexOf("' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . '") > -1 ) url = url.substr(' . strlen( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') ) . ');
 					if ( (type != "image") && (type != "media") ) type = "link";
 					switch(type){
 						case "media":
@@ -598,11 +598,11 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 	 * @return	string	resolved path
 	 */
 	 function getPath($path, $abs = false) {
-		$httpTypo3Path = substr( substr( t3lib_div::getIndpEnv('TYPO3_SITE_URL'), strlen( t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') ) ), 0, -1 );
+		$httpTypo3Path = substr( substr( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), strlen( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') ) ), 0, -1 );
 		$httpTypo3Path = (strlen($httpTypo3Path) == 1) ? '/' : $httpTypo3Path . '/';
 		if ($abs)
-			return t3lib_div::getFileAbsFileName($path);
-		return $httpTypo3Path . str_replace(PATH_site,'',t3lib_div::getFileAbsFileName($path));
+			return \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
+		return $httpTypo3Path . str_replace(PATH_site,'',\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path));
   }
 
 	/**
@@ -618,7 +618,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 			$useOldGoodTestInt = !class_exists('t3lib_utility_Math');
 		}
 		if ($useOldGoodTestInt) {
-			$result = t3lib_div::testInt($value);
+			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::testInt($value);
 		}
 		else {
 			$result = t3lib_utility_Math::canBeInterpretedAsInteger($value);

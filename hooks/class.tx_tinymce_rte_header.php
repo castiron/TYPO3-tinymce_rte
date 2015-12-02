@@ -44,7 +44,7 @@ class tx_tinymce_rte_header {
 	function preStartPageHook($parameters, $pObj) {
 		// Only add JS if this is the top TYPO3 frame/document
 		if ( $pObj->bodyTagId == 'typo3-backend-php' ) {
-			$tinymce_rte = t3lib_div::makeInstance('tx_tinymce_rte_base');
+			$tinymce_rte = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_tinymce_rte_base');
 
 			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig(0);
 			$conf = $pageTSconfig['RTE.']['pageLoad.'];

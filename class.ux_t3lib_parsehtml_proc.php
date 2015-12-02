@@ -40,7 +40,7 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 		foreach($blockSplit as $k => $v)	{
 			$error = '';
 			if ($k%2)	{	// block:
-				$tagCode = t3lib_div::unQuoteFilenames(trim(substr($this->getFirstTag($v),0,-1)),true);
+				$tagCode = \TYPO3\CMS\Core\Utility\GeneralUtility::unQuoteFilenames(trim(substr($this->getFirstTag($v),0,-1)),true);
 				$link_param = $tagCode[1];
 				$href = '';
 				$siteUrl = $this->siteUrl();
@@ -56,7 +56,7 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 						// Detects if a file is found in site-root OR is a simulateStaticDocument.
 					list($rootFileDat) = explode('?',$link_param);
 					$rFD_fI = pathinfo($rootFileDat);
-					if (trim($rootFileDat) && !strstr($link_param,'/') && (@is_file(PATH_site.$rootFileDat) || t3lib_div::inList('php,html,htm',strtolower($rFD_fI['extension']))))	{
+					if (trim($rootFileDat) && !strstr($link_param,'/') && (@is_file(PATH_site.$rootFileDat) || \TYPO3\CMS\Core\Utility\GeneralUtility::inList('php,html,htm',strtolower($rFD_fI['extension']))))	{
 						$href = $siteUrl.$link_param;
 					} elseif($urlChar && (strstr($link_param,'//') || !$fileChar || $urlChar<$fileChar))	{	// url (external): If doubleSlash or if a '.' comes before a '/'.
 						if (!preg_match('/^[a-z]*:\/\//',trim(strtolower($link_param))))	{$scheme='http://';} else {$scheme='';}
@@ -65,7 +65,7 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 						$href = $siteUrl.$link_param;
 					} else {	// integer or alias (alias is without slashes or periods or commas, that is 'nospace,alphanum_x,lower,unique' according to tables.php!!)
 							// Splitting the parameter by ',' and if the array counts more than 1 element it's a id/type/parameters triplet
-						$pairParts = t3lib_div::trimExplode(',', $link_param, TRUE);
+						$pairParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $link_param, TRUE);
 						$idPart = $pairParts[0];
 						$link_params_parts = explode('#', $idPart);
 						$idPart = trim($link_params_parts[0]);
@@ -128,37 +128,37 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 					// Init
 				$attribArray = $this->get_tag_attributes_classic($v,1);
 				$siteUrl = $this->siteUrl();
-				$sitePath = str_replace (t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST'), '', $siteUrl);
+				$sitePath = str_replace (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST'), '', $siteUrl);
 
 				$absRef = trim($attribArray['src']);		// It's always a absolute URL coming from the RTE into the Database.
 
 					// make path absolute if it is relative and we have a site path wich is not '/'
 				$pI=pathinfo($absRef);
-				if($sitePath AND !$pI['scheme'] && t3lib_div::isFirstPartOfStr($absRef,$sitePath)) {
+				if($sitePath AND !$pI['scheme'] && \TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($absRef,$sitePath)) {
 						// if site is in a subpath (eg. /~user_jim/) this path needs to be removed because it will be added with $siteUrl
 					$absRef = substr($absRef,strlen($sitePath));
 					$absRef = $siteUrl.$absRef;
 				}
 
 					// External image from another URL? In that case, fetch image (unless disabled feature).
-				if (!t3lib_div::isFirstPartOfStr($absRef,$siteUrl) && !$this->procOptions['dontFetchExtPictures'])	{
+				if (!\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($absRef,$siteUrl) && !$this->procOptions['dontFetchExtPictures'])	{
 					$externalFile = $this->getUrl($absRef);	// Get it
 					if ($externalFile)	{
 						$pU = parse_url($absRef);
 						$pI=pathinfo($pU['path']);
 
-						if (t3lib_div::inList('gif,png,jpeg,jpg',strtolower($pI['extension'])))	{
-							$filename = t3lib_div::shortMD5($absRef).'.'.$pI['extension'];
+						if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('gif,png,jpeg,jpg',strtolower($pI['extension'])))	{
+							$filename = \TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5($absRef).'.'.$pI['extension'];
 							$origFilePath = PATH_site.$this->rteImageStorageDir().'RTEmagicP_'.$filename;
 							$C_origFilePath = PATH_site.$this->rteImageStorageDir().'RTEmagicC_'.$filename.'.'.$pI['extension'];
 							if (!@is_file($origFilePath))	{
-								t3lib_div::writeFile($origFilePath,$externalFile);
-								t3lib_div::writeFile($C_origFilePath,$externalFile);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::writeFile($origFilePath,$externalFile);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::writeFile($C_origFilePath,$externalFile);
 							}
 							$absRef = $siteUrl.$this->rteImageStorageDir().'RTEmagicC_'.$filename.'.'.$pI['extension'];
 
 							$attribArray['src']=$absRef;
-							$params = t3lib_div::implodeAttributes($attribArray,1);
+							$params = \TYPO3\CMS\Core\Utility\GeneralUtility::implodeAttributes($attribArray,1);
 							$imgSplit[$k] = '<img '.$params.' />';
 						}
 					}
@@ -166,10 +166,10 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 
 					// Check image as local file (siteURL equals the one of the image)
 				
-				if ( (strpos($absRef, 'http://') === FALSE) AND (strpos($absRef, 'https://') === FALSE) AND (strpos($absRef, 'ftp://') === FALSE) )	{  //XCLASS changed from: if (t3lib_div::isFirstPartOfStr($absRef,$siteUrl))	{
+				if ( (strpos($absRef, 'http://') === FALSE) AND (strpos($absRef, 'https://') === FALSE) AND (strpos($absRef, 'ftp://') === FALSE) )	{  //XCLASS changed from: if (\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($absRef,$siteUrl))	{
 					$path = rawurldecode(substr($absRef,strlen($siteUrl)));	// Rel-path, rawurldecoded for special characters.
 					$path = $absRef; //XCLASS added
-					$filepath = t3lib_div::getFileAbsFileName($path);		// Abs filepath, locked to relative path of this project.
+					$filepath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);		// Abs filepath, locked to relative path of this project.
 					
 
 						// Check file existence (in relative dir to this installation!)
@@ -177,13 +177,13 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 
 							// If "magic image":
 						$pathPre=$this->rteImageStorageDir().'RTEmagicC_';
-						if (t3lib_div::isFirstPartOfStr($path,$pathPre))	{
+						if (\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($path,$pathPre))	{
 							// Find original file:
 							$pI=pathinfo(substr($path,strlen($pathPre)));
 							$filename = substr($pI['basename'],0,-strlen('.'.$pI['extension']));
 							$origFilePath = PATH_site.$this->rteImageStorageDir().'RTEmagicP_'.$filename;
 							if (@is_file($origFilePath))	{
-								$imgObj = t3lib_div::makeInstance('t3lib_stdGraphic');
+								$imgObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_stdGraphic');
 								$imgObj->init();
 								$imgObj->mayScaleUp=0;
 								$imgObj->tempPath=PATH_site.$imgObj->tempPath;
@@ -204,7 +204,7 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 										$attribArray['style'] = preg_replace('/((?:^|)\s*(?:width|height)\s*:[^;]*(?:$|;))/si', '', $attribArray['style']);
 										$attribArray['width']=$imgI[0];
 										$attribArray['height']=$imgI[1];
-										$params = t3lib_div::implodeAttributes($attribArray,1);
+										$params = \TYPO3\CMS\Core\Utility\GeneralUtility::implodeAttributes($attribArray,1);
 										$imgSplit[$k]='<img '.$params.' />';
 									}
 								}
@@ -239,7 +239,7 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 							}
 
 								// Compile the image tag again:
-							$params = t3lib_div::implodeAttributes($attribArray,1);
+							$params = \TYPO3\CMS\Core\Utility\GeneralUtility::implodeAttributes($attribArray,1);
 							$imgSplit[$k]='<img '.$params.' />';
 						}
 					} else {	// Remove image if it was not found in a proper position on the server!
@@ -253,10 +253,10 @@ class ux_t3lib_parsehtml_proc extends t3lib_parsehtml_proc {
 				if ($imgSplit[$k])	{
 					$attribArray=$this->get_tag_attributes_classic($imgSplit[$k],1);
 					$absRef = trim($attribArray['src']);
-					if (t3lib_div::isFirstPartOfStr($absRef,$siteUrl))	{
+					if (\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($absRef,$siteUrl))	{
 						$attribArray['src'] = $this->relBackPath.substr($absRef,strlen($siteUrl));
 						if (!isset($attribArray['alt']))	$attribArray['alt']='';		// Must have alt-attribute for XHTML compliance.
-						$imgSplit[$k]='<img '.t3lib_div::implodeAttributes($attribArray,1,1).' />';
+						$imgSplit[$k]='<img '.\TYPO3\CMS\Core\Utility\GeneralUtility::implodeAttributes($attribArray,1,1).' />';
 					}
 				}
 			}

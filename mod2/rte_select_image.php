@@ -157,7 +157,7 @@ class localFolderTree extends t3lib_folderTree {
 				$subFolderPadding += 16;
 			}
 			$subFolderStyle = ' style="padding-left: '.$subFolderPadding.'px;"';
-			$out.='<tr><td '.$subFolderStyle.'nowrap="nowrap">'.$v['HTML'].$this->wrapTitle(t3lib_div::fixed_lgd_cs($v['row']['title'],$titleLen),$v['row']).'</td></tr>';
+			$out.='<tr><td '.$subFolderStyle.'nowrap="nowrap">'.$v['HTML'].$this->wrapTitle(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($v['row']['title'],$titleLen),$v['row']).'</td></tr>';
 			if ($v['isLast']) {
 				$subFolderPadding -= 16;
 			}
@@ -196,10 +196,10 @@ class SC_rte_select_image {
 		global $BE_USER;
 
 		// Current site url:
-		$this->siteUrl = t3lib_div::getIndpEnv("TYPO3_SITE_URL");
+		$this->siteUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv("TYPO3_SITE_URL");
 
 		// Determine nature of current url:
-		$this->act=t3lib_div::_GP("act");
+		$this->act=\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("act");
 
 		$this->modData = $BE_USER->getModuleData("rte_select_image.php","ses");
 		if ($this->act!="image")	{
@@ -211,25 +211,25 @@ class SC_rte_select_image {
 			}
 		}
 
-		$expandPage = t3lib_div::_GP("expandFolder");
+		$expandPage = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP("expandFolder");
 		if (isset($expandPage))	{
 			$this->modData["expandFolder"]=$expandPage;
 			$BE_USER->pushModuleData("rte_select_image.php",$this->modData);
 		} else {
-			t3lib_div::_GETset($this->modData["expandFolder"],'expandFolder');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GETset($this->modData["expandFolder"],'expandFolder');
 		}
 
 		if (!$this->act)	{
 			$this->act="magic";
 		}
 
-		$RTEtsConfigParts = explode(":",t3lib_div::_GP("RTEtsConfigParams"));
+		$RTEtsConfigParts = explode(":",\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("RTEtsConfigParams"));
 		if (count($RTEtsConfigParts)<2)	die("Error: The GET parameter 'RTEtsConfigParams' was missing. Close the window.");
 		$RTEsetup = $GLOBALS["BE_USER"]->getTSConfig("RTE",t3lib_BEfunc::getPagesTSconfig($RTEtsConfigParts[5]));
 		$this->thisConfig = t3lib_BEfunc::RTEsetup($RTEsetup["properties"],$RTEtsConfigParts[0],$RTEtsConfigParts[2],$RTEtsConfigParts[4]);
 		$this->imgPath = $RTEtsConfigParts[6];
 
-		$this->allowedItems = array_diff(explode(",","magic,plain,upload"),t3lib_div::trimExplode(",",$this->thisConfig["blindImageOptions"],1));
+		$this->allowedItems = array_diff(explode(",","magic,plain,upload"),\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(",",$this->thisConfig["blindImageOptions"],1));
 		reset($this->allowedItems);
 		if (!in_array($this->act,$this->allowedItems))	$this->act = current($this->allowedItems);
 
@@ -252,10 +252,10 @@ class SC_rte_select_image {
 	 * @return	[type]		...
 	 */
 	function magicProcess()	{
-		if ($this->act=="magic" && t3lib_div::_GP("insertMagicImage"))	{
-			$filepath = t3lib_div::_GP("insertMagicImage");
+		if ($this->act=="magic" && \TYPO3\CMS\Core\Utility\GeneralUtility::_GP("insertMagicImage"))	{
+			$filepath = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP("insertMagicImage");
 
-			$imgObj = t3lib_div::makeInstance("t3lib_stdGraphic");
+			$imgObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("t3lib_stdGraphic");
 			$imgObj->init();
 			$imgObj->mayScaleUp=0;
 			$imgObj->tempPath=PATH_site.$imgObj->tempPath;
@@ -264,14 +264,14 @@ class SC_rte_select_image {
 
 			if (is_array($imgInfo) && count($imgInfo)==4 && $this->rteImageStorageDir())	{
 				$fI=pathinfo($imgInfo[3]);
-				$fileFunc = t3lib_div::makeInstance("t3lib_basicFileFunctions");
+				$fileFunc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("t3lib_basicFileFunctions");
 				$basename = $fileFunc->cleanFileName("RTEmagicP_".$fI["basename"]);
 				$destPath =PATH_site.$this->rteImageStorageDir();
 				if (@is_dir($destPath))	{
 					$destName = $fileFunc->getUniqueName($basename,$destPath);
 					@copy($imgInfo[3],$destName);
-					$cHeight = \TYPO3\CMS\Core\Utility\MathUtility::isIntegerInRange(t3lib_div::_GP("cHeight"), 0, $this->thisConfig['typo3filemanager.']['maxMagicImages.']['height']);
-					$cWidth = \TYPO3\CMS\Core\Utility\MathUtility::isIntegerInRange(t3lib_div::_GP("cWidth"),0,$this->thisConfig['typo3filemanager.']['maxMagicImages.']['width']);
+					$cHeight = \TYPO3\CMS\Core\Utility\MathUtility::isIntegerInRange(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("cHeight"), 0, $this->thisConfig['typo3filemanager.']['maxMagicImages.']['height']);
+					$cWidth = \TYPO3\CMS\Core\Utility\MathUtility::isIntegerInRange(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("cWidth"),0,$this->thisConfig['typo3filemanager.']['maxMagicImages.']['width']);
 					if (!$cHeight)	$cHeight=$this->thisConfig['typo3filemanager.']['maxMagicImages.']['height'];
 					if (!$cWidth)	$cWidth=$this->thisConfig['typo3filemanager.']['maxMagicImages.']['width'];
 		//			debug(array($cHeight,$cWidth));
@@ -352,7 +352,7 @@ class SC_rte_select_image {
 	function init()	{
 		global $LANG,$BACK_PATH;
 
-		$this->doc = t3lib_div::makeInstance('template');
+		$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('template');
 		$this->doc->docType= 'xhtml_trans';
 		$this->doc->backPath = $BACK_PATH;
 
@@ -362,7 +362,7 @@ class SC_rte_select_image {
 			<!--
 			function jumpToUrl(URL,anchor)	{	//
 				var add_act = URL.indexOf("act=")==-1 ? "&act='.$this->act.'" : "";
-				var RTEtsConfigParams = "&RTEtsConfigParams='.rawurlencode(t3lib_div::_GP('RTEtsConfigParams')).'";
+				var RTEtsConfigParams = "&RTEtsConfigParams='.rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('RTEtsConfigParams')).'";
 
 				var cur_width = selectedImageRef ? "&cWidth="+selectedImageRef.width : "";
 				var cur_height = selectedImageRef ? "&cHeight="+selectedImageRef.height : "";
@@ -491,7 +491,7 @@ class SC_rte_select_image {
 		$bgcolor='class=""';
 		$bgcolorA='class="current"';
 
-		if ($this->act=="image" || t3lib_div::_GP("cWidth"))	{	// If $this->act is specifically set to "image" or if cWidth is passed around...
+		if ($this->act=="image" || \TYPO3\CMS\Core\Utility\GeneralUtility::_GP("cWidth"))	{	// If $this->act is specifically set to "image" or if cWidth is passed around...
 			$menu.='<td align=center nowrap="nowrap" width="25%"'.($this->act=="image"?$bgcolorA:$bgcolor).'><a href="#" onclick="jumpToUrl(\'?act=image\');return false;"><strong>'.$LANG->getLL("currentImage").'</strong></a></td>';
 		}
 		if (in_array("magic",$this->allowedItems)) $menu.='<li '.($this->act=="magic"?$bgcolorA:$bgcolor).' title="'.str_replace('"', "'",$LANG->getLL("magicImage_msg")).'"><span><a href="#" onclick="jumpToUrl(\'?act=magic\');return false;">'.$LANG->getLL("magicImage").'</a></span></li>'."\n";
@@ -513,7 +513,7 @@ class SC_rte_select_image {
 					// MENU-ITEMS, fetching the setting for thumbnails from File>List module:
 				$_MOD_MENU = array('displayThumbs' => '');
 				$_MCONF['name']='file_list';
-				$_MOD_SETTINGS = t3lib_BEfunc::getModuleData($_MOD_MENU, t3lib_div::_GP('SET'), $_MCONF['name']);
+				$_MOD_SETTINGS = t3lib_BEfunc::getModuleData($_MOD_MENU, \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('SET'), $_MCONF['name']);
 				$addParams = '&act='.$this->act.'&expandFolder='.rawurlencode($this->modData["expandFolder"]);
 				$thumbNailCheck = '<fieldset><legend>'.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_file_list.php:displayThumbs',1).'</legend>'.t3lib_BEfunc::getFuncCheck('','SET[displayThumbs]',$_MOD_SETTINGS['displayThumbs'],'rte_select_image.php',$addParams).'</fieldset>';
 			} else {
@@ -521,9 +521,9 @@ class SC_rte_select_image {
 			}
 
 				// File-folders:
-			$foldertree = t3lib_div::makeInstance("localFolderTree");
+			$foldertree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("localFolderTree");
 			$tree=$foldertree->getBrowsableTree();
-			list(,,$specUid) = explode("_",t3lib_div::_GP("PM"));
+			list(,,$specUid) = explode("_",\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("PM"));
 			$files = $this->expandFolder($foldertree->specUIDmap[$specUid],$this->act=="plain",$noThumbs?$noThumbs:!$_MOD_SETTINGS['displayThumbs']);
 			$files = '<fieldset><legend>'.$GLOBALS['LANG']->getLL('images').'</legend><div style="overflow: hidden;"><table><tr><td>'.$files.'</td></tr></table></div></fieldset>';
 			$this->content.= '<table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -540,14 +540,14 @@ class SC_rte_select_image {
 			// ***************************
 
 				// File-folders:
-			$foldertree = t3lib_div::makeInstance("localFolderTree");
+			$foldertree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("localFolderTree");
 			$tree=$foldertree->getBrowsableTree();
-			list(,,$specUid) = explode("_",t3lib_div::_GP("PM"));
+			list(,,$specUid) = explode("_",\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("PM"));
 			$files = $this->expandFolder($foldertree->specUIDmap[$specUid],$this->act=="plain",$noThumbs?$noThumbs:!$_MOD_SETTINGS['displayThumbs']);
 			$files = '<fieldset><legend>'.$GLOBALS['LANG']->getLL('images').'</legend><div style="overflow: hidden;"><table><tr><td>'.$files.'</td></tr></table></div></fieldset>';
-			$fileProcessor = t3lib_div::makeInstance("t3lib_basicFileFunctions");
+			$fileProcessor = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("t3lib_basicFileFunctions");
 			$fileProcessor->init($FILEMOUNTS, $TYPO3_CONF_VARS["BE"]["fileExtensions"]);
-			$path=t3lib_div::_GP("expandFolder");
+			$path=\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("expandFolder");
 			if (!$path || $path=="/" || !@is_dir($path))	{
 				$path = $fileProcessor->findTempFolder();	// The closest TEMP-path is found
 				if ($path)	$path.="/";
@@ -602,23 +602,23 @@ class SC_rte_select_image {
 	function expandFolder($expandFolder=0,$plainFlag=0,$noThumbs=0)	{
 		global $LANG;
 
-		$expandFolder = $expandFolder ? $expandFolder :t3lib_div::_GP("expandFolder");
+		$expandFolder = $expandFolder ? $expandFolder :\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("expandFolder");
 		$out="";
 
 		$resolutionLimit_x = $this->thisConfig['typo3filemanager.']['maxPlainImages.']['width'];
 		$resolutionLimit_y = $this->thisConfig['typo3filemanager.']['maxPlainImages.']['height'];
 
 		if ($expandFolder)	{
-			$files = t3lib_div::getFilesInDir($expandFolder,($plainFlag?"jpg,jpeg,gif,png":$GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"]),1,1);	// $extensionList="",$prependPath=0,$order="")
+			$files = \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($expandFolder,($plainFlag?"jpg,jpeg,gif,png":$GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"]),1,1);	// $extensionList="",$prependPath=0,$order="")
 			if (is_array($files))	{
 				reset($files);
 
 				$titleLen=intval($GLOBALS["BE_USER"]->uc["titleLen"]);
 				$picon='<img src="'.$this->doc->backPath.'gfx/i/_icon_webfolders.gif" width="18" height="16" alt="folder" />';
-				$picon.=htmlspecialchars(t3lib_div::fixed_lgd_cs(basename($expandFolder),$titleLen));
+				$picon.=htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(basename($expandFolder),$titleLen));
 				$out.='<span class="nobr">'.$picon.'</span><br />';
 
-				$imgObj = t3lib_div::makeInstance("t3lib_stdGraphic");
+				$imgObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("t3lib_stdGraphic");
 				$imgObj->init();
 				$imgObj->mayScaleUp=0;
 				$imgObj->tempPath=PATH_site.$imgObj->tempPath;
@@ -627,13 +627,13 @@ class SC_rte_select_image {
 				while(list(,$filepath)=each($files))	{
 					$fI=pathinfo($filepath);
 
-					//$iurl = $this->siteUrl.t3lib_div::rawUrlEncodeFP(substr($filepath,strlen(PATH_site)));
-					$iurl = t3lib_div::rawUrlEncodeFP(substr($filepath,strlen(PATH_site)));
+					//$iurl = $this->siteUrl.\TYPO3\CMS\Core\Utility\GeneralUtility::rawUrlEncodeFP(substr($filepath,strlen(PATH_site)));
+					$iurl = \TYPO3\CMS\Core\Utility\GeneralUtility::rawUrlEncodeFP(substr($filepath,strlen(PATH_site)));
 					$imgInfo = $imgObj->getImageDimensions($filepath);
 
 					$icon = t3lib_BEfunc::getFileIcon(strtolower($fI["extension"]));
 					$pDim = $imgInfo[0]."x".$imgInfo[1]." pixels";
-					$size=" (".t3lib_div::formatSize(filesize($filepath))."bytes, ".$pDim.")";
+					$size=" (".\TYPO3\CMS\Core\Utility\GeneralUtility::formatSize(filesize($filepath))."bytes, ".$pDim.")";
 					$icon = '<img src="'.$this->doc->backPath.'gfx/fileicons/'.$icon.'" style="width: 18px; height: 16px; border: none;" title="'.$fI["basename"].$size.'" class="absmiddle" alt="'.$icon.'" />';
 					if (!$plainFlag)	{
 						$ATag = '<a href="#" onclick="return jumpToUrl(\'?insertMagicImage='.rawurlencode($filepath).'\');">';
@@ -651,7 +651,7 @@ class SC_rte_select_image {
 						$ATag2_e="</a>";
 					}
 
-					$filenameAndIcon=$ATag.$icon.htmlspecialchars(t3lib_div::fixed_lgd_cs(basename($filepath),$titleLen)).$ATag_e;
+					$filenameAndIcon=$ATag.$icon.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(basename($filepath),$titleLen)).$ATag_e;
 
 					$lines[]='<tr class="bgColor4"><td nowrap="nowrap">'.$filenameAndIcon.'&nbsp;</td></tr><tr><td nowrap="nowrap" class="pixel">'.$pDim.'&nbsp;</td></tr>';
 					$lines[]='<tr><td>'.(
@@ -678,7 +678,7 @@ class SC_rte_select_image {
 
 	//	debug($path);
 		$count=1;
-		$header = t3lib_div::isFirstPartOfStr($path,PATH_site)?substr($path,strlen(PATH_site)):$path;
+		$header = \TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($path,PATH_site)?substr($path,strlen(PATH_site)):$path;
 		$code.='<fieldset><legend>'.$LANG->getLL("uploadImage").'</legend><FORM action="'.$this->doc->backPath.'tce_file.php" method="post" name="editform" enctype="'.$GLOBALS["TYPO3_CONF_VARS"]["SYS"]["form_enctype"].'"><table border=0 cellpadding=0 cellspacing=3><tr><td>';
 		$code.="<strong>".$LANG->getLL("path").":</strong> ".$header."</td></tr><tr><td>";
 		for ($a=1;$a<=$count;$a++)	{
@@ -691,7 +691,7 @@ class SC_rte_select_image {
 			$code .= '<input type="hidden" name="formToken" value="' . $this->getFormToken() . '">';
 		}
 		$code.='
-			<input type="Hidden" name="redirect" value="'.t3lib_extMgm::extRelPath('tinymce_rte').'mod2/rte_select_image.php?act=magic&expandFolder='.rawurlencode($path).'&RTEtsConfigParams='.rawurlencode(t3lib_div::_GP("RTEtsConfigParams")).'">
+			<input type="Hidden" name="redirect" value="'.t3lib_extMgm::extRelPath('tinymce_rte').'mod2/rte_select_image.php?act=magic&expandFolder='.rawurlencode($path).'&RTEtsConfigParams='.rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("RTEtsConfigParams")).'">
 			<img src="clear.gif" height="8" width="100%" alt="clear" />
 			<input type="Submit" name="submit" value="'.$LANG->sL("LLL:EXT:lang/locallang_core.php:file_upload.php.submit").'"><img src="clear.gif" height="8" width="100%" alt="clear" />
 			<div id="c-override">
@@ -744,7 +744,7 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/tinymce
 
 
 // Make instance:
-$SOBE = t3lib_div::makeInstance('SC_rte_select_image');
+$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('SC_rte_select_image');
 $SOBE->preinit();
 $SOBE->magicProcess();
 $SOBE->init();

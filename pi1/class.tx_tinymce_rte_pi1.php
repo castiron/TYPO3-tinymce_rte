@@ -89,7 +89,7 @@ class tx_tinymce_rte_pi1 extends tx_tinymce_rte_base {
 		//loads the current Value and create the textarea
 		$value = $this->transformContent('rte',$PA['itemFormElValue'],$table,$field,$row,$specConf,$thisConfig, $RTErelPath ,$thePidValue);
 		$code .= $this->triggerField($PA['itemFormElName']);
-		$code .= '<textarea id="RTEarea'.$this->rteId.'" class="tinymce_rte" name="'.htmlspecialchars($PA['itemFormElName']).'" rows="30" cols="100">'.t3lib_div::formatForTextarea($value).'</textarea>';
+		$code .= '<textarea id="RTEarea'.$this->rteId.'" class="tinymce_rte" name="'.htmlspecialchars($PA['itemFormElName']).'" rows="30" cols="100">'.\TYPO3\CMS\Core\Utility\GeneralUtility::formatForTextarea($value).'</textarea>';
 		
 		return $code;
 	}

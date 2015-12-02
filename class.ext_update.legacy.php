@@ -67,9 +67,9 @@ class ext_update {
 		$this->diffPath['optional'] = t3lib_extMgm::extPath('tinymce_rte').'patcher/diffs2/';
 		$this->filePath = t3lib_extMgm::extPath('tinymce_rte');
 		
-		if (t3lib_div::_GP('update') && $descKey=t3lib_div::_GP('desckey')) {
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('update') && $descKey=\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('desckey')) {
 			$content = '<h2 class="typo3-tstemplate-ceditor-subcat">'.$this->desc[$descKey]['title'].'</h2>';
-			$patches = t3lib_div::_GP($descKey.'patch');
+			$patches = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP($descKey.'patch');
 			$updated = false;
 			foreach ($patches as $patchName => $value) {
 				if ($value = intval($value)) {
@@ -79,14 +79,14 @@ class ext_update {
 			}
 			$content .= '<div style="padding-top: 10px;"></div>';
 			$content .= ($updated) ? 'Patching done..' : 'Nothing selected to patch..';
-			$content .= '<div style="padding-top: 25px;"></div><a href="'.htmlspecialchars(t3lib_div::linkThisScript()).'" class="typo3-goBack"><img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/goback.gif','width="14" height="14"').' alt="" />Go back</a>';
+			$content .= '<div style="padding-top: 25px;"></div><a href="'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript()).'" class="typo3-goBack"><img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/goback.gif','width="14" height="14"').' alt="" />Go back</a>';
 			// Remove cache files
 			$this->removeCachedFiles();
 		}
-		elseif (t3lib_div::_GP('clear')) {
+		elseif (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('clear')) {
 			$content = '<h2 class="typo3-tstemplate-ceditor-subcat">Clearing gzip and TYPO3 cache.</h2>';
 			$content .= 'Gzip and TYPO3 cache cleared..';
-			$content .= '<div style="padding-top: 25px;"></div><a href="'.htmlspecialchars(t3lib_div::linkThisScript()).'" class="typo3-goBack"><img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/goback.gif','width="14" height="14"').' alt="" />Go back</a>';
+			$content .= '<div style="padding-top: 25px;"></div><a href="'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript()).'" class="typo3-goBack"><img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/goback.gif','width="14" height="14"').' alt="" />Go back</a>';
 			// Remove cache files
 			$this->removeCachedFiles();
 		}
@@ -189,7 +189,7 @@ class ext_update {
 	}
 	
 	function displayDiffs($diffPath,$descKey) {
-		$diffFiles =  t3lib_div::getFilesInDir($diffPath,'diff',0,'1');
+		$diffFiles =  \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($diffPath,'diff',0,'1');
 		if (!count($diffFiles)) return false;
 		$content = '';
 		foreach ($diffFiles as $diffFile) {
@@ -228,7 +228,7 @@ class ext_update {
 			'<input type="button" name="resetall" value="Reset all" onclick="return difftoggle(0,\''.$descKey.'\')" /> ' .
 			'<input name="update" value="Update" type="submit" style="font-weight: bold;"/>
 			<input type="hidden" name="desckey" value="'.$descKey.'" />';
-		return '<form name="'.$descKey.'_form" action="'.htmlspecialchars(t3lib_div::linkThisScript()).'" method="post">'.$content.'</form>';
+		return '<form name="'.$descKey.'_form" action="'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript()).'" method="post">'.$content.'</form>';
 		
 	}
 	
@@ -248,7 +248,7 @@ class ext_update {
 		$path = PATH_site . 'typo3temp/tinymce_rte/';
 		if (is_dir($path)) {
 			// Remove TinyMCE gzip cache files.
-			$cfiles = t3lib_div::getFilesInDir($path);
+			$cfiles = \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($path);
 			foreach ($cfiles as $cfile) {
 				if (preg_match('/tiny_mce_\w{32}\.gz/', $cfile)) {
 					@unlink($path.$cfile);

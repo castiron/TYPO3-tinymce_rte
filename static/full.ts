@@ -39,7 +39,7 @@ RTE.default.init {
 			title = TYPO3 mod see get params
 			src = EXT:tinymce_rte/mod4/TinyMCETemplate.php?wow=ja&woow=nein
 			description = Use an TYPO3 mod to get data easily into the the TinyMCE Template System
-			# inside this php file is only print_r(t3lib_div::_GET());
+			# inside this php file is only print_r(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET());
 			include = EXT:tinymce_rte/res/tinymce_templates/getParams.php
 		}
 	}

@@ -65,7 +65,7 @@ class TBE_browser_recordList extends localRecordList {
 	 * @return	void
 	 */
 	function __construct() {
-		$this->thisScript = t3lib_div::getIndpEnv('SCRIPT_NAME');
+		$this->thisScript = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME');
 	}
 
 	/**
@@ -83,8 +83,8 @@ class TBE_browser_recordList extends localRecordList {
 			($this->thumbs?'&imagemode='.$this->thumbs:'').
 			($this->searchString?'&search_field='.rawurlencode($this->searchString):'').
 			($this->searchLevels?'&search_levels='.rawurlencode($this->searchLevels):'').
-			((!$exclList || !t3lib_div::inList($exclList,'sortField')) && $this->sortField?'&sortField='.rawurlencode($this->sortField):'').
-			((!$exclList || !t3lib_div::inList($exclList,'sortRev')) && $this->sortRev?'&sortRev='.rawurlencode($this->sortRev):'').
+			((!$exclList || !\TYPO3\CMS\Core\Utility\GeneralUtility::inList($exclList,'sortField')) && $this->sortField?'&sortField='.rawurlencode($this->sortField):'').
+			((!$exclList || !\TYPO3\CMS\Core\Utility\GeneralUtility::inList($exclList,'sortRev')) && $this->sortRev?'&sortRev='.rawurlencode($this->sortRev):'').
 				// extra:
 			$this->ext_addP()
 			;
@@ -118,7 +118,7 @@ class TBE_browser_recordList extends localRecordList {
 		if (!$code) {
 			$code = '<i>['.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.no_title',1).']</i>';
 		} else {
-			$code = htmlspecialchars(t3lib_div::fixed_lgd_cs($code,$this->fixedL));
+			$code = htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($code,$this->fixedL));
 		}
 
 		$title = t3lib_BEfunc::getRecordTitle($table,$row,FALSE,TRUE);
@@ -174,7 +174,7 @@ class localPageTree extends t3lib_browseTree {
 	 * @return	void
 	 */
 	function __construct() {
-		$this->thisScript = t3lib_div::getIndpEnv('SCRIPT_NAME');
+		$this->thisScript = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME');
 		$this->init();
 
 		$this->clause = ' AND doktype!=255'.$this->clause;
@@ -590,16 +590,16 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 
 
 			// Main GPvars:
-		$this->pointer = t3lib_div::_GP('pointer');
-		$this->bparams = t3lib_div::_GP('bparams');
-		$this->P = t3lib_div::_GP('P');
-		$this->RTEtsConfigParams = t3lib_div::_GP('RTEtsConfigParams');
-		$this->expandPage = t3lib_div::_GP('expandPage');
-		$this->expandFolder = t3lib_div::_GP('expandFolder');
-		$this->PM = t3lib_div::_GP('PM');
+		$this->pointer = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pointer');
+		$this->bparams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('bparams');
+		$this->P = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('P');
+		$this->RTEtsConfigParams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('RTEtsConfigParams');
+		$this->expandPage = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('expandPage');
+		$this->expandFolder = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('expandFolder');
+		$this->PM = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('PM');
 
 			// Find "mode"
-		$this->mode=t3lib_div::_GP('mode');
+		$this->mode=\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('mode');
 		if (!$this->mode)	{
 			$this->mode='rte';
 		}
@@ -612,7 +612,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			include_once('include_php4.inc');
 
 			// Site URL
-		$this->siteURL = t3lib_div::getIndpEnv('TYPO3_SITE_URL');	// Current site url
+		$this->siteURL = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');	// Current site url
 
 			// Rich Text Editor specific configuration:
 		$addPassOnParams='';
@@ -624,16 +624,16 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		}
 
 			// the script to link to
-		$this->thisScript = t3lib_div::getIndpEnv('SCRIPT_NAME');
+		$this->thisScript = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('SCRIPT_NAME');
 
 			// init fileProcessor
-		$this->fileProcessor = t3lib_div::makeInstance('t3lib_basicFileFunctions');
+		$this->fileProcessor = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_basicFileFunctions');
 		$this->fileProcessor->init($GLOBALS['FILEMOUNTS'], $GLOBALS['TYPO3_CONF_VARS']['BE']['fileExtensions']);
 
 
 			// CurrentUrl - the current link url must be passed around if it exists
 		if ($this->mode == 'wizard')	{
-			$currentLinkParts = t3lib_div::trimExplode(' ',$this->P['currentValue']);
+			$currentLinkParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(' ',$this->P['currentValue']);
 			$initialCurUrlArray = array (
 				'href'   => $currentLinkParts[0],
 				'target' => $currentLinkParts[1],
@@ -641,23 +641,23 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 				'title'  => $currentLinkParts[3],
 			);
 
-			$this->curUrlArray = (is_array(t3lib_div::_GP('curUrl'))) ? array_merge($initialCurUrlArray, t3lib_div::_GP('curUrl')) : $initialCurUrlArray;
+			$this->curUrlArray = (is_array(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('curUrl'))) ? array_merge($initialCurUrlArray, \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('curUrl')) : $initialCurUrlArray;
 			$this->curUrlInfo = $this->parseCurUrl($this->siteURL.'?id='.$this->curUrlArray['href'], $this->siteURL);
 
 			if ($this->curUrlInfo['pageid'] == 0 && $this->curUrlArray['href']) { // pageid == 0 means that this is not an internal (page) link
 				if (@file_exists(PATH_site.rawurldecode($this->curUrlArray['href'])))	{ // check if this is a link to a file
-					if (t3lib_div::isFirstPartOfStr($this->curUrlArray['href'], PATH_site)) {
+					if (\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($this->curUrlArray['href'], PATH_site)) {
 						$currentLinkParts[0] = substr($this->curUrlArray['href'], strlen(PATH_site));
 					}
 					$this->curUrlInfo = $this->parseCurUrl($this->siteURL.$this->curUrlArray['href'], $this->siteURL);
 				} elseif (strstr($this->curUrlArray['href'], '@')) { // check for email link
-					if (t3lib_div::isFirstPartOfStr($this->curUrlArray['href'], 'mailto:')) {
+					if (\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($this->curUrlArray['href'], 'mailto:')) {
 						$currentLinkParts[0] = substr($this->curUrlArray['href'], 7);
 					}
 
 					$this->curUrlInfo = $this->parseCurUrl('mailto:'.$currentLinkParts[0], $this->siteURL);
 				} elseif (strstr($this->curUrlArray['href'], 'record:') || strstr($this->curUrlArray['href'], 'env_link:')) {
-					$handel = t3lib_div::trimExplode(':',$this->curUrlArray['href']);
+					$handel = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':',$this->curUrlArray['href']);
 
 					if ( is_array($this->thisConfig['linkhandler.'][$handel[1] . '.']) ) {
 
@@ -711,15 +711,15 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			}
 
 		} else {
-			$this->curUrlArray = t3lib_div::_GP('curUrl');
+			$this->curUrlArray = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('curUrl');
 			if ($this->curUrlArray['all'])	{
-				$this->curUrlArray=t3lib_div::get_tag_attributes($this->curUrlArray['all']);
+				$this->curUrlArray=\TYPO3\CMS\Core\Utility\GeneralUtility::get_tag_attributes($this->curUrlArray['all']);
 			}
 			$this->curUrlInfo=$this->parseCurUrl($this->curUrlArray['href'],$this->siteURL);
 		}
 
 			// Determine nature of current url:
-		$this->act=t3lib_div::_GP('act');
+		$this->act=\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('act');
 		if (!$this->act)	{
 			$this->act=$this->curUrlInfo['act'];
 		}
@@ -742,7 +742,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 
 
 			// Creating backend template object:
-		$this->doc = t3lib_div::makeInstance('template');
+		$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('template');
 		$this->doc->docType= 'xhtml_trans';
 		$this->doc->backPath = $BACK_PATH;
 
@@ -780,7 +780,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			$P2['params']['allowedExtensions']=$this->P['params']['allowedExtensions'];
 			$P2['params']['blindLinkOptions']=$this->P['params']['blindLinkOptions'];
 
-			$addPassOnParams.=t3lib_div::implodeArrayForUrl('P',$P2);
+			$addPassOnParams.=\TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('P',$P2);
 
 			$JScode.='
 			  function directSetHref(value) {
@@ -821,7 +821,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 					}
 			';
 			//miss use bparams
-			if(t3lib_div::_GP('bparams') == 'media') {
+			if(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('bparams') == 'media') {
 				$JScode .= '
 					// for media browsers: update media preview
 					win.document.getElementById(tinyMCEPopup.getWindowArg("input")).onchange();
@@ -904,7 +904,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 					// Setting alternative browsing mounts (ONLY local to browse_links.php this script so they stay "read-only")
 				$altMountPoints = trim($GLOBALS['BE_USER']->getTSConfigVal('options.pageTree.altElementBrowserMountPoints'));
 				if ($altMountPoints) {
-					$GLOBALS['BE_USER']->groupData['webmounts'] = implode(',', array_unique(t3lib_div::intExplode(',', $altMountPoints)));
+					$GLOBALS['BE_USER']->groupData['webmounts'] = implode(',', array_unique(\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $altMountPoints)));
 					$GLOBALS['WEBMOUNTS'] = $GLOBALS['BE_USER']->returnWebmounts();
 				}
 			case 'file':
@@ -913,7 +913,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 					// Setting additional read-only browsing file mounts
 				$altMountPoints = trim($GLOBALS['BE_USER']->getTSConfigVal('options.folderTree.altElementBrowserMountPoints'));
 				if ($altMountPoints) {
-					$altMountPoints = t3lib_div::trimExplode(',', $altMountPoints);
+					$altMountPoints = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $altMountPoints);
 					foreach($altMountPoints as $filePathRelativeToFileadmindir)	{
 						$GLOBALS['BE_USER']->addFileMount('', $filePathRelativeToFileadmindir, $filePathRelativeToFileadmindir, 1, 'readonly');
 					}
@@ -927,7 +927,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		$browserRendered = false;
 		/*if (is_array ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/browse_links.php']['browserRendering'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/browse_links.php']['browserRendering'] as $classRef) {
-				$browserRenderObj = t3lib_div::getUserObj($classRef);
+				$browserRenderObj = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($classRef);
 				if (is_object($browserRenderObj) && method_exists($browserRenderObj, 'isValid') && method_exists($browserRenderObj, 'render')) {
 					if ($browserRenderObj->isValid($this->mode, $this)) {
 						$this->content.= $browserRenderObj->render($this->mode, $this);
@@ -1061,8 +1061,8 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 	function main_rte($wiz=1)	{
 		global $LANG, $BACK_PATH;
 
-		#t3lib_div::debug($_POST);
-		#t3lib_div::debug($_GET);
+		#\TYPO3\CMS\Core\Utility\GeneralUtility::debug($_POST);
+		#\TYPO3\CMS\Core\Utility\GeneralUtility::debug($_GET);
 
 			// Starting content:
 		$content=$this->doc->startPage($LANG->getLL('title',1));
@@ -1070,11 +1070,11 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			// Initializing the action value, possibly removing blinded values etc:
 		$allowedItems = array_diff(
 			explode(',','page,file,folder,url,mail,spec'),
-			t3lib_div::trimExplode(',',$this->thisConfig['blindLinkOptions'],1)
+			\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$this->thisConfig['blindLinkOptions'],1)
 		);
 		$allowedItems = array_diff(
 			$allowedItems,
-			t3lib_div::trimExplode(',',$this->P['params']['blindLinkOptions'])
+			\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$this->P['params']['blindLinkOptions'])
 		);
 
 			//call hook for extra options
@@ -1171,7 +1171,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			break;
 			case 'file':
 			case 'folder':
-				$foldertree             = t3lib_div::makeInstance('rteFolderTree');
+				$foldertree             = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('rteFolderTree');
 				$foldertree->thisScript = $this->thisScript;
 				$tree                   = $foldertree->getBrowsableTree();
 
@@ -1288,7 +1288,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 				}
 			break;
 			case 'page':
-				$pagetree = t3lib_div::makeInstance('rtePageTree');
+				$pagetree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('rtePageTree');
 				$pagetree->thisScript = $this->thisScript;
 				$tree=$pagetree->getBrowsableTree();
 				$cElements = $this->expandPage();
@@ -1338,7 +1338,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		$pArr = explode('|',$this->bparams);
 
 			// Making the browsable pagetree:
-		$pagetree = t3lib_div::makeInstance('TBE_PageTree');
+		$pagetree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TBE_PageTree');
 
 		$pagetree->thisScript=$this->thisScript;
 		$pagetree->ext_pArrPages = !strcmp($pArr[3],'pages')?1:0;
@@ -1408,7 +1408,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 				// MENU-ITEMS, fetching the setting for thumbnails from File>List module:
 			$_MOD_MENU = array('displayThumbs' => '');
 			$_MCONF['name']='file_list';
-			$_MOD_SETTINGS = t3lib_BEfunc::getModuleData($_MOD_MENU, t3lib_div::_GP('SET'), $_MCONF['name']);
+			$_MOD_SETTINGS = t3lib_BEfunc::getModuleData($_MOD_MENU, \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('SET'), $_MCONF['name']);
 			$addParams = '&act='.$this->act.'&mode='.$this->mode.'&expandFolder='.rawurlencode($path).'&bparams='.rawurlencode($this->bparams);
 			$thumbNailCheck = t3lib_BEfunc::getFuncCheck('','SET[displayThumbs]',$_MOD_SETTINGS['displayThumbs'],'browse_links.php',$addParams).' '.$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_file_list.php:displayThumbs',1);
 		} else {
@@ -1417,7 +1417,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		$noThumbs = $noThumbs?$noThumbs:!$_MOD_SETTINGS['displayThumbs'];
 
 			// Create folder tree:
-		$foldertree = t3lib_div::makeInstance('TBE_FolderTree');
+		$foldertree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TBE_FolderTree');
 		$foldertree->thisScript=$this->thisScript;
 		$foldertree->ext_noTempRecyclerDirs = ($this->mode == 'filedrag');
 		$tree=$foldertree->getBrowsableTree();
@@ -1485,7 +1485,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		}
 
 			// Create folder tree:
-		$foldertree                         = t3lib_div::makeInstance('TBE_FolderTree');
+		$foldertree                         = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TBE_FolderTree');
 		$foldertree->thisScript             = $this->thisScript;
 		$foldertree->ext_noTempRecyclerDirs = ($this->mode == 'filedrag');
 		$tree                                = $foldertree->getBrowsableTree(false);
@@ -1558,7 +1558,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			$titleLen=intval($GLOBALS['BE_USER']->uc['titleLen']);
 			$mainPageRec = t3lib_BEfunc::getRecordWSOL('pages',$expPageId);
 			$picon=t3lib_iconWorks::getIconImage('pages',$mainPageRec,$BACK_PATH,'');
-			$picon.= htmlspecialchars(t3lib_div::fixed_lgd_cs($mainPageRec['title'],$titleLen));
+			$picon.= htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($mainPageRec['title'],$titleLen));
 			$out.=$picon.'<br />';
 
 			$queries = array('tt_content.' => array('sorting' => 'colpos,sorting', 'select' => 'uid,header,hidden,starttime,endtime,fe_group,CType,colpos,bodytext' ));
@@ -1608,21 +1608,21 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 						// Putting list element HTML together:
 					$cropAt = 24;
 					$titleText = $row['header'] ? $row['header'] : (isset($row['bodytext']) ? strip_tags($row['bodytext']) : '');
-					$t=strlen(htmlspecialchars(t3lib_div::fixed_lgd_cs($titleText,$titleLen)))>$cropAt ? '&nbsp;'.substr(htmlspecialchars(t3lib_div::fixed_lgd_cs($titleText,$titleLen)),0,$cropAt).'...' : '&nbsp;'.htmlspecialchars(t3lib_div::fixed_lgd_cs($titleText,$titleLen));
+					$t=strlen(htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($titleText,$titleLen)))>$cropAt ? '&nbsp;'.substr(htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($titleText,$titleLen)),0,$cropAt).'...' : '&nbsp;'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($titleText,$titleLen));
 
 
 					$out.='<tr ' . $current . '><td style="width: 20px;"><img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/ol/join'.($c==$cc?'bottom':'').'.gif','width="18" height="16"').' alt="" /></td>';
 
 					$out .= '<td style="width: 18px;">' . $icon . '</td>';
 					if( $currentTable == 'tt_content' && !$this->thisConfig['linkhandler.']['tt_content.'])
-						$out .= '<td><a href="#" onclick="return link_insert(\''.$expPageId.'\',\'#'.$row['uid'].'\');" title="'.htmlspecialchars(t3lib_div::fixed_lgd_cs($titleText,$titleLen)).'">';
+						$out .= '<td><a href="#" onclick="return link_insert(\''.$expPageId.'\',\'#'.$row['uid'].'\');" title="'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($titleText,$titleLen)).'">';
 					else
-						$out .= '<td><a href="#" onclick="return record_insert(\''.$currentTable.'\',\''.$row['uid'].'\');" title="'.htmlspecialchars(t3lib_div::fixed_lgd_cs($titleText,$titleLen)).'">';
+						$out .= '<td><a href="#" onclick="return record_insert(\''.$currentTable.'\',\''.$row['uid'].'\');" title="'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($titleText,$titleLen)).'">';
 
 					$out .= $t .'</a></td></tr>';
 
 						// Finding internal anchor points:
-					if (t3lib_div::inList('text,textpic', $row['CType']))	{
+					if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('text,textpic', $row['CType']))	{
 						$split = preg_split('/(<a[^>]+name=[\'"]?([^"\'>[:space:]]+)[\'"]?[^>]*>)/i', $row['bodytext'], -1, PREG_SPLIT_DELIM_CAPTURE);
 
 						foreach($split as $skey => $sval)	{
@@ -1662,7 +1662,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			if (!strcmp(trim($tables),'*'))	{
 				$tablesArr = array_keys($TCA);
 			} else {
-				$tablesArr = t3lib_div::trimExplode(',',$tables,1);
+				$tablesArr = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$tables,1);
 			}
 			reset($tablesArr);
 
@@ -1684,7 +1684,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			}
 			$picon=$BACK_PATH.t3lib_iconWorks::getIconImage('pages',$mainPageRec,$BACK_PATH,'');
 			$pBicon=$ATag2?'<img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/plusbullet2.gif','width="18" height="16"').' alt="" />':'';
-			$pText=htmlspecialchars(t3lib_div::fixed_lgd_cs($mainPageRec['title'],$titleLen));
+			$pText=htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($mainPageRec['title'],$titleLen));
 			$out.=$picon.$ATag2.$pBicon.$ATag_e.$ATag.$pText.$ATag_e.'<br />';
 
 				// Initialize the record listing:
@@ -1695,7 +1695,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			$table='';
 
 				// Generate the record list:
-			$dblist = t3lib_div::makeInstance('TBE_browser_recordList');
+			$dblist = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TBE_browser_recordList');
 			$dblist->thisScript=$this->thisScript;
 			$dblist->backPath = $GLOBALS['BACK_PATH'];
 			$dblist->thumbs = 0;
@@ -1704,10 +1704,10 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			$dblist->clickMenuEnabled=0;
 			$dblist->tableList=implode(',',$tablesArr);
 
-			$dblist->start($id,t3lib_div::_GP('table'),$pointer,
-				t3lib_div::_GP('search_field'),
-				t3lib_div::_GP('search_levels'),
-				t3lib_div::_GP('showLimit')
+			$dblist->start($id,\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('table'),$pointer,
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('search_field'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('search_levels'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('showLimit')
 			);
 			$dblist->setDispFields();
 			$dblist->generateList($id,$table);
@@ -1740,14 +1740,14 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			$this->expandFolder;
 
 		if($expandFolder && $this->checkFolder($expandFolder)) {
-			if(t3lib_div::isFirstPartOfStr($expandFolder, PATH_site)) {
+			if(\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($expandFolder, PATH_site)) {
 				$rootFolder = substr($expandFolder, strlen(PATH_site));
 			}
 
 			$folders = array();
 
 				// Listing the folders:
-			$folders = t3lib_div::get_dirs($expandFolder);
+			$folders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($expandFolder);
 			if(count($folders) > 0) {
 				foreach($folders as $index => $folder) {
 					$folders[$index] = $rootFolder.$folder.'/';
@@ -1849,7 +1849,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		$out='';
 		if ($expandFolder && $this->checkFolder($expandFolder))	{
 				// Listing the files:
-			$files = t3lib_div::getFilesInDir($expandFolder,$extensionList,1,1);	// $extensionList="",$prependPath=0,$order='')
+			$files = \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($expandFolder,$extensionList,1,1);	// $extensionList="",$prependPath=0,$order='')
 			$out.= $this->fileList($files, $expandFolder, $noThumbs);
 		}
 
@@ -1873,13 +1873,13 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			if ($this->isWebFolder($expandFolder))	{
 
 					// Read files from directory:
-				$files = t3lib_div::getFilesInDir($expandFolder,$extensionList,1,1);	// $extensionList="",$prependPath=0,$order='')
+				$files = \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($expandFolder,$extensionList,1,1);	// $extensionList="",$prependPath=0,$order='')
 				if (is_array($files))	{
 					$out.=$this->barheader(sprintf($GLOBALS['LANG']->getLL('files').' (%s):',count($files)));
 
 					$titleLen=intval($GLOBALS['BE_USER']->uc['titleLen']);
 					$picon='<img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/i/_icon_webfolders.gif','width="18" height="16"').' alt="" />';
-					$picon.=htmlspecialchars(t3lib_div::fixed_lgd_cs(basename($expandFolder),$titleLen));
+					$picon.=htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(basename($expandFolder),$titleLen));
 					$out.=$picon.'<br />';
 
 						// Init row-array:
@@ -1896,19 +1896,19 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 						$fI=pathinfo($filepath);
 
 							// URL of image:
-						$iurl = $this->siteURL.t3lib_div::rawurlencodeFP(substr($filepath,strlen(PATH_site)));
+						$iurl = $this->siteURL.\TYPO3\CMS\Core\Utility\GeneralUtility::rawurlencodeFP(substr($filepath,strlen(PATH_site)));
 
 							// Show only web-images
-						if (t3lib_div::inList('gif,jpeg,jpg,png',$fI['extension']))	{
+						if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('gif,jpeg,jpg,png',$fI['extension']))	{
 							$imgInfo = @getimagesize($filepath);
 							$pDim = $imgInfo[0].'x'.$imgInfo[1].' pixels';
 
 							$ficon = t3lib_BEfunc::getFileIcon(strtolower($fI['extension']));
-							$size=' ('.t3lib_div::formatSize(filesize($filepath)).'bytes'.($pDim?', '.$pDim:'').')';
+							$size=' ('.\TYPO3\CMS\Core\Utility\GeneralUtility::formatSize(filesize($filepath)).'bytes'.($pDim?', '.$pDim:'').')';
 							$icon = '<img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/fileicons/'.$ficon,'width="18" height="16"').' class="absmiddle" title="'.htmlspecialchars($fI['basename'].$size).'" alt="" />';
-							$filenameAndIcon=$icon.htmlspecialchars(t3lib_div::fixed_lgd_cs(basename($filepath),$titleLen));
+							$filenameAndIcon=$icon.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(basename($filepath),$titleLen));
 
-							if (t3lib_div::_GP('noLimit'))	{
+							if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('noLimit'))	{
 								$maxW=10000;
 								$maxH=10000;
 							} else {
@@ -1931,7 +1931,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 								<tr>
 									<td nowrap="nowrap">'.$filenameAndIcon.'&nbsp;</td>
 									<td nowrap="nowrap">'.
-									($imgInfo[0]!=$IW ? '<a href="'.htmlspecialchars(t3lib_div::linkThisScript(array('noLimit'=>'1'))).'">'.
+									($imgInfo[0]!=$IW ? '<a href="'.htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript(array('noLimit'=>'1'))).'">'.
 														'<img'.t3lib_iconWorks::skinImg($BACK_PATH,'gfx/icon_warning2.gif','width="18" height="16"').' title="'.$GLOBALS['LANG']->getLL('clickToRedrawFullSize',1).'" alt="" />'.
 														'</a>':'').
 									$pDim.'&nbsp;</td>
@@ -2053,7 +2053,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 			if (count($specialParts)==2)	{	// Special kind (Something RTE specific: User configurable links through: "userLinks." from ->thisConfig)
 				$info['value']='#_SPECIAL'.$specialParts[1];
 				$info['act']='spec';
-			} elseif (t3lib_div::isFirstPartOfStr($href,$siteUrl))	{	// If URL is on the current frontend website:
+			} elseif (\TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($href,$siteUrl))	{	// If URL is on the current frontend website:
 				$rel = substr($href,strlen($siteUrl));
 				if (@file_exists(PATH_site.rawurldecode($rel)))	{	// URL is a file, which exists:
 					$info['value']=rawurldecode($rel);
@@ -2077,7 +2077,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 
 							$pageRow = t3lib_BEfunc::getRecordWSOL('pages',$id);
 							$titleLen=intval($GLOBALS['BE_USER']->uc['titleLen']);
-							$info['value']=$GLOBALS['LANG']->getLL('page',1)." '".htmlspecialchars(t3lib_div::fixed_lgd_cs($pageRow['title'],$titleLen))."' (ID:".$id.($uP['fragment']?', #'.$uP['fragment']:'').')';
+							$info['value']=$GLOBALS['LANG']->getLL('page',1)." '".htmlspecialchars(\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($pageRow['title'],$titleLen))."' (ID:".$id.($uP['fragment']?', #'.$uP['fragment']:'').')';
 							$info['pageid']=$id;
 							$info['cElement']=$uP['fragment'];
 							$info['act']='page';
@@ -2117,7 +2117,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 		if ($this->isReadOnlyFolder($path)) return '';
 
 			// Create header, showing upload path:
-		$header = t3lib_div::isFirstPartOfStr($path,PATH_site)?substr($path,strlen(PATH_site)):$path;
+		$header = \TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($path,PATH_site)?substr($path,strlen(PATH_site)):$path;
 		$code=$this->barheader($GLOBALS['LANG']->getLL('uploadImage').':');
 		$code.='
 
@@ -2171,7 +2171,7 @@ class SC_browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {
 
 		if ($this->isReadOnlyFolder($path)) return '';
 			// Create header, showing upload path:
-		$header = t3lib_div::isFirstPartOfStr($path,PATH_site)?substr($path,strlen(PATH_site)):$path;
+		$header = \TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($path,PATH_site)?substr($path,strlen(PATH_site)):$path;
 		$code=$this->barheader($GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:file_newfolder.php.pagetitle').':');
 		$code.='
 

@@ -43,11 +43,11 @@ class tx_tinymce_rte_handler {
 		if ( !is_array($linkConfig) )
 			return $linktxt;
 			
-		$linkHandlerData = t3lib_div::trimExplode(':', $linkHandlerValue);
+		$linkHandlerData = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':', $linkHandlerValue);
 		if ( !isset($linkConfig[$linkHandlerData[0].'.']) )
 			return $linktxt;
 		
-		$localcObj = t3lib_div::makeInstance('tslib_cObj');
+		$localcObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_cObj');
 		$row = $this->getRecordRow($linkHandlerData[0], $linkHandlerData[1]);
 		
 		$localcObj->start($row, '');
@@ -58,7 +58,7 @@ class tx_tinymce_rte_handler {
 		} else {
 			$lconf = $linkConfig[$linkHandlerData[0].'.']['default.'];
 		}
-		$link_paramA = t3lib_div::unQuoteFilenames($link_param, true);
+		$link_paramA = \TYPO3\CMS\Core\Utility\GeneralUtility::unQuoteFilenames($link_param, true);
 		$linkClass = $link_paramA[2] == '-' ? '' : $link_paramA[2];
 		$lconf['ATagParams'] = $this->pObj->getATagParams($conf) . ($linkClass ? ' class="' . $linkClass . '"' : '');
 

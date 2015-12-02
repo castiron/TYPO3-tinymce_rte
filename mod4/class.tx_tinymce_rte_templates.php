@@ -46,24 +46,24 @@ class tx_tinymce_rte_templates {
 	function init() {
 		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
 
-		if( (t3lib_div::_GP('pageId') < 0) || (t3lib_div::_GP('pageId') == '') || (t3lib_div::_GP('templateId') < 0) || (t3lib_div::_GP('templateId') == '') || (t3lib_div::_GP('ISOcode') == '')  ) {
+		if( (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pageId') < 0) || (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pageId') == '') || (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('templateId') < 0) || (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('templateId') == '') || (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ISOcode') == '')  ) {
 			die('if you want to us this mod you need at least to define pageId, templateId and ISOcode as GET parameter. Example path/to/TinyMCETemplate.php?pageId=7&templateId=2&ISOcode=en');
 		}
 
-		$this->pageId = t3lib_div::_GP('pageId');
-		$this->templateId = t3lib_div::_GP('templateId');
-		$this->ISOcode = t3lib_div::_GP('ISOcode');
+		$this->pageId = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pageId');
+		$this->templateId = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('templateId');
+		$this->ISOcode = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ISOcode');
 
 		$this->pageTSconfig = t3lib_BEfunc::getPagesTSconfig( $this->pageId );
 
-		if ( t3lib_div::_GP('mode') != 'FE' )
+		if ( \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('mode') != 'FE' )
 			$this->conf = $this->pageTSconfig['RTE.']['default.'];
 		else
 			$this->conf = $this->pageTSconfig['RTE.']['default.']['FE.'];
 
 		$LANG->init( strtolower($this->ISOcode) );
 
-		$this->tinymce_rte = t3lib_div::makeInstance('tx_tinymce_rte_base');
+		$this->tinymce_rte = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_tinymce_rte_base');
 		$this->conf = $this->tinymce_rte->init( $this->conf );
 
 		$row = array('pid' => $this->pageId, 'ISOcode' => $this->ISOcode );

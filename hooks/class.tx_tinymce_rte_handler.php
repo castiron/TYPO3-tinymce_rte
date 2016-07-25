@@ -29,29 +29,29 @@
  * @author Thomas Allmer <thomas.allmer@webteam.at>
  *
  */
- 
+
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 class tx_tinymce_rte_handler {
 
 	function main($linktxt, $conf, $linkHandlerKeyword, $linkHandlerValue, $link_param, &$pObj) {
 		$this->pObj = &$pObj;
-		
+
 		$pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig($GLOBALS['TSFE']->id);
 		$linkConfig = $pageTSConfig['RTE.']['default.']['linkhandler.'];
-		
+
 		if ( !is_array($linkConfig) )
 			return $linktxt;
-			
+
 		$linkHandlerData = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':', $linkHandlerValue);
 		if ( !isset($linkConfig[$linkHandlerData[0].'.']) )
 			return $linktxt;
-		
-		$localcObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_cObj');
+
+		$localcObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
 		$row = $this->getRecordRow($linkHandlerData[0], $linkHandlerData[1]);
-		
+
 		$localcObj->start($row, '');
-		
+
 		$lconf = array();
 		if (is_array($linkConfig[$linkHandlerData[0].'.'][$row['pid'].'.'])) {
 			$lconf = $linkConfig[$linkHandlerData[0].'.'][$row['pid'].'.'];
@@ -65,13 +65,13 @@ class tx_tinymce_rte_handler {
 		if ($link_paramA[3]) {
 			$lconf['title'] = $link_paramA[3];
 		}
-		
+
 		// remove the tinymce_rte specific attributes
 		unset( $lconf['select'], $lconf['sorting'] );
-		
+
 		return $localcObj->typoLink($linktxt, $lconf);
 	}
-	
+
 	function getRecordRow($table,$uid) {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, 'uid='.intval($uid).$this->pObj->enableFields($table), '', '');
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);

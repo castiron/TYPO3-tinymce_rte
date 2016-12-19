@@ -132,7 +132,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 	function init($config, $rteId = 1, $PA=array()) {
 		global $LANG, $BE_USER;
 
-		if ( TYPO3_branch == 4.1 && !t3lib_extMgm::isLoaded('tinymce_rte_patch41') )
+		if ( TYPO3_branch == 4.1 && !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tinymce_rte_patch41') )
 			die('for TYPO3 4.1 you need to install the extension tinymce_rte_patch41');
 
 		// get the language (also checks if lib is called from FE or BE, which might of use later.)
@@ -151,7 +151,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 			$this->language = $LANG->csConvObj->isoArray[$this->language];
 
 		// check if TinyMCE language file exists
-		$langpath = (t3lib_extmgm::isLoaded($config['languagesExtension'])) ? t3lib_extMgm::siteRelPath($config['languagesExtension']) : t3lib_extMgm::siteRelPath('tinymce_rte') . 'res/';
+		$langpath = (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($config['languagesExtension'])) ? \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($config['languagesExtension']) : \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('tinymce_rte') . 'res/';
 		if(!is_file(PATH_site . $langpath . 'tiny_mce/langs/' . $this->language . '.js')) {
 		  $this->language = 'en';
 		}
@@ -277,8 +277,8 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 				$where[] = $table . '.field.colPos' . $row['colPos'] . '.ctype.' . $row['CType'] . '.lang.' . $row['ISOcode'];;
 
 				// TemplaVoila is installed
-				if (t3lib_extMgm::isLoaded('templavoila')) {
-					require_once(t3lib_extMgm::extPath('templavoila').'class.tx_templavoila_api.php');
+				if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila')) {
+					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('templavoila').'class.tx_templavoila_api.php');
 					$tvAPI = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_templavoila_api');
 
 					// Add all nested TV fields to location
@@ -329,7 +329,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 	function getCoreScript( $config ) {
 		$code = '';
 
-		$loaded = ( t3lib_extmgm::isLoaded($config['languagesExtension']) ) ? 1 : 0;
+		$loaded = ( \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($config['languagesExtension']) ) ? 1 : 0;
 		if ($config['gzip'])
 			$code .= '
 				<script type="text/javascript" src="' . $config['tiny_mceGzipPath'] . '"></script>
@@ -347,7 +347,7 @@ class tx_tinymce_rte_base extends \TYPO3\CMS\Backend\Rte\AbstractRte  {
 			';
 		else {
 		  $code .= '<script type="text/javascript" src="' . $config['tiny_mcePath'] . '"></script>';
-			if ( t3lib_extmgm::isLoaded($config['languagesExtension']) && ($config['init.']['language'] != 'en') && ($config['init.']['language'] != 'de') ) {
+			if ( \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($config['languagesExtension']) && ($config['init.']['language'] != 'en') && ($config['init.']['language'] != 'de') ) {
 				$code .= '<script type="text/javascript">';
 				$code .= $this->loadLanguageExtension($config['init.']['language'], $config['init.']['plugins'], $this->getPath('EXT:' . $config['languagesExtension'] .'/tiny_mce/') );
 				$code .= '</script>';

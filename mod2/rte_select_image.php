@@ -691,7 +691,7 @@ class SC_rte_select_image {
 			$code .= '<input type="hidden" name="formToken" value="' . $this->getFormToken() . '">';
 		}
 		$code.='
-			<input type="Hidden" name="redirect" value="'.t3lib_extMgm::extRelPath('tinymce_rte').'mod2/rte_select_image.php?act=magic&expandFolder='.rawurlencode($path).'&RTEtsConfigParams='.rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("RTEtsConfigParams")).'">
+			<input type="Hidden" name="redirect" value="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('tinymce_rte').'mod2/rte_select_image.php?act=magic&expandFolder='.rawurlencode($path).'&RTEtsConfigParams='.rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP("RTEtsConfigParams")).'">
 			<img src="clear.gif" height="8" width="100%" alt="clear" />
 			<input type="Submit" name="submit" value="'.$LANG->sL("LLL:EXT:lang/locallang_core.php:file_upload.php.submit").'"><img src="clear.gif" height="8" width="100%" alt="clear" />
 			<div id="c-override">

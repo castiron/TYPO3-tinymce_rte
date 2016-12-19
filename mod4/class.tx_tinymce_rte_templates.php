@@ -33,7 +33,7 @@
 require ('conf.php');
 require ($BACK_PATH.'init.php');
 require_once ($BACK_PATH.'template.php');
-require_once(t3lib_extMgm::extPath('tinymce_rte').'class.tx_tinymce_rte_base.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tinymce_rte').'class.tx_tinymce_rte_base.php');
 
 class tx_tinymce_rte_templates {
 

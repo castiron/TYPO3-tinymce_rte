@@ -63,9 +63,9 @@ class ext_update {
 			return '<div style="padding-top: 10px;"></div><p>Updater <strong>requires</strong> PHP5 and TYPO3 v4.2+</p>';
 		}
 		
-		$this->diffPath['required'] = t3lib_extMgm::extPath('tinymce_rte').'patcher/diffs/';
-		$this->diffPath['optional'] = t3lib_extMgm::extPath('tinymce_rte').'patcher/diffs2/';
-		$this->filePath = t3lib_extMgm::extPath('tinymce_rte');
+		$this->diffPath['required'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tinymce_rte').'patcher/diffs/';
+		$this->diffPath['optional'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tinymce_rte').'patcher/diffs2/';
+		$this->filePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tinymce_rte');
 		
 		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('update') && $descKey=\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('desckey')) {
 			$content = '<h2 class="typo3-tstemplate-ceditor-subcat">'.$this->desc[$descKey]['title'].'</h2>';
@@ -256,7 +256,7 @@ class ext_update {
 			}
 		}
 		// Remove TYPO3 cache files.
-		t3lib_extMgm::removeCacheFiles();
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
 	}
 
 	/**
